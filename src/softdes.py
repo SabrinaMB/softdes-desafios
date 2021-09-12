@@ -5,12 +5,13 @@ Created on Wed Jun 28 09:00:39 2017
 @author: rauli
 """
 
-from flask import Flask, request, jsonify, abort, make_response, session, render_template
-from flask_httpauth import HTTPBasicAuth
-from datetime import datetime
 import sqlite3
 import json
 import hashlib
+from flask import Flask, request, jsonify, abort, make_response, session, render_template
+from flask_httpauth import HTTPBasicAuth
+from datetime import datetime
+
 
 DBNAME = './quiz.db'
 
@@ -46,11 +47,11 @@ def lambda_handler(event, context):
         return "Função inválida."
 
 
-def converteData(orig):
+def convert_data(orig):
     return orig[8:10] + '/' + orig[5:7] + '/' + orig[0:4] + ' ' + orig[11:13] + ':' + orig[14:16] + ':' + orig[17:]
 
 
-def getQuizes(user):
+def get_quizes(user):
     conn = sqlite3.connect(DBNAME)
     cursor = conn.cursor()
     if user == 'admin' or user == 'fabioja':
@@ -63,7 +64,7 @@ def getQuizes(user):
     return info
 
 
-def getUserQuiz(userid, quizid):
+def get_user_quiz(userid, quizid):
     conn = sqlite3.connect(DBNAME)
     cursor = conn.cursor()
     cursor.execute(
@@ -74,7 +75,7 @@ def getUserQuiz(userid, quizid):
     return info
 
 
-def setUserQuiz(userid, quizid, sent, answer, result):
+def set_user_quiz(userid, quizid, sent, answer, result):
     conn = sqlite3.connect(DBNAME)
     cursor = conn.cursor()
     # print("insert into USERQUIZ(userid,quizid,sent,answer,result) values ('{0}',{1},'{2}','{3}','{4}');".format(userid, quizid, sent, answer, result))
@@ -86,7 +87,7 @@ def setUserQuiz(userid, quizid, sent, answer, result):
     conn.close()
 
 
-def getQuiz(id, user):
+def get_quiz(id, user):
     conn = sqlite3.connect(DBNAME)
     cursor = conn.cursor()
     if user == 'admin' or user == 'fabioja':
@@ -101,7 +102,7 @@ def getQuiz(id, user):
     return info
 
 
-def setInfo(pwd, user):
+def set_info(pwd, user):
     conn = sqlite3.connect(DBNAME)
     cursor = conn.cursor()
     cursor.execute("UPDATE USER set pass = ? where user = ?", (pwd, user))
@@ -109,7 +110,7 @@ def setInfo(pwd, user):
     conn.close()
 
 
-def getInfo(user):
+def get_info(user):
     conn = sqlite3.connect(DBNAME)
     cursor = conn.cursor()
     cursor.execute("SELECT pass, type from USER where user = '{0}'".format(user))
@@ -133,12 +134,12 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?TX'
 def main():
     msg = ''
     p = 1
-    challenges = getQuizes(auth.username())
+    challenges = get_quizes(auth.username())
     sent = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if request.method == 'POST' and 'ID' in request.args:
         id = request.args.get('ID')
-        quiz = getQuiz(id, auth.username())
+        quiz = get_quiz(id, auth.username())
         if len(quiz) == 0:
             msg = "Boa tentativa, mas não vai dar certo!"
             p = 2
@@ -167,7 +168,7 @@ def main():
             feedback = 'Sem erros.'
             result = 'OK!'
 
-        setUserQuiz(auth.username(), id, sent, feedback, result)
+        set_user_quiz(auth.username(), id, sent, feedback, result)
 
     if request.method == 'GET':
         if 'ID' in request.args:
@@ -180,17 +181,17 @@ def main():
         p = 2
         return render_template('index.html', username=auth.username(), challenges=challenges, p=p, msg=msg)
     else:
-        quiz = getQuiz(id, auth.username())
+        quiz = get_quiz(id, auth.username())
 
         if len(quiz) == 0:
             msg = "Oops... Desafio invalido!"
             p = 2
             return render_template('index.html', username=auth.username(), challenges=challenges, p=p, msg=msg)
 
-        answers = getUserQuiz(auth.username(), id)
+        answers = get_user_quiz(auth.username(), id)
 
     return render_template('index.html', username=auth.username(), challenges=challenges, quiz=quiz[0],
-                           e=(sent > quiz[0][2]), answers=answers, p=p, msg=msg, expi=converteData(quiz[0][2]))
+                           e=(sent > quiz[0][2]), answers=answers, p=p, msg=msg, expi=convert_data(quiz[0][2]))
 
 
 @app.route('/pass', methods=['GET', 'POST'])
@@ -206,18 +207,18 @@ def change():
         if nova != repet:
             msg = 'As novas senhas nao batem'
             p = 3
-        elif getInfo(auth.username()) != hashlib.md5(velha.encode()).hexdigest():
+        elif get_info(auth.username()) != hashlib.md5(velha.encode()).hexdigest():
             msg = 'A senha antiga nao confere'
             p = 3
         else:
-            setInfo(hashlib.md5(nova.encode()).hexdigest(), auth.username())
+            set_info(hashlib.md5(nova.encode()).hexdigest(), auth.username())
             msg = 'Senha alterada com sucesso'
             p = 3
     else:
         msg = ''
         p = 3
 
-    return render_template('index.html', username=auth.username(), challenges=getQuizes(auth.username()), p=p, msg=msg)
+    return render_template('index.html', username=auth.username(), challenges=get_quizes(auth.username()), p=p, msg=msg)
 
 
 @app.route('/logout')
@@ -227,7 +228,7 @@ def logout():
 
 @auth.get_password
 def get_password(username):
-    return getInfo(username)
+    return get_info(username)
 
 
 @auth.hash_password
