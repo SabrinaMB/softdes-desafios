@@ -1,3 +1,6 @@
-def desafio1(n):
-    #return 0
-    return n
+"""
+Função de desafio
+"""
+def desafio1(score):
+    """Devolve a nota do desafio"""
+    return score
