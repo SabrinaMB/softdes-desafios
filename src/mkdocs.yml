@@ -1,0 +1,6 @@
+site_name: Documentação Softdes-Desafios
+nav:
+    - Home: index.md
+    - Usuário: user.md
+    - Desenvolvedor: dev.md
+theme: readthedocs
