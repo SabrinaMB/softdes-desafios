@@ -4,7 +4,6 @@ Created on Wed Jun 28 09:00:39 2017
 
 @author: rauli
 """
-
 import sqlite3
 import hashlib
 import numbers
@@ -12,7 +11,7 @@ from datetime import datetime
 from flask import Flask, request, render_template
 from flask_httpauth import HTTPBasicAuth
 
-DBNAME = './quiz.db'
+DBNAME = 'src/quiz.db'
 
 
 def lambda_handler(event):
@@ -23,7 +22,7 @@ def lambda_handler(event):
                 return abs(first - second) > 1e-3
             return first != second
 
-        challenge_number = int(event['challenge_number'])
+        ndes = int(event['ndes'])
         code = event['code']
         args = event['args']
         resp = event['resp']
@@ -31,12 +30,11 @@ def lambda_handler(event):
         exec(code, locals())
 
         test = []
-        for index in enumerate(args):
-            if not 'desafio{0}'.format(challenge_number) in locals():
-                return "Nome da função inválido. Usar 'def desafio{0}(...)'" \
-                    .format(challenge_number)
+        for index, arg in enumerate(args):
+            if not 'desafio{0}'.format(ndes) in locals():
+                return "Nome da função inválido. Usar 'def desafio{0}(...)'".format(ndes)
 
-            if not_equals(eval('desafio{0}(*arg)'.format(challenge_number)), resp[index]):
+            if not_equals(eval('desafio{0}(*arg)'.format(ndes)), resp[index]):
                 test.append(diag[index])
 
         return " ".join(test)
@@ -47,7 +45,7 @@ def lambda_handler(event):
 def convert_data(orig):
     """Converte a data para o formato correto"""
     return orig[8:10] + '/' + orig[5:7] + '/' + orig[0:4] + ' ' + \
-        orig[11:13] + ':' + orig[14:16] + ':' + orig[17:]
+           orig[11:13] + ':' + orig[14:16] + ':' + orig[17:]
 
 
 def get_quizes(user):
@@ -59,7 +57,7 @@ def get_quizes(user):
     else:
         cursor.execute(
             "SELECT id, numb from QUIZ where release < '{0}'"
-            .format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+                .format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     info = list(cursor.fetchall())
     conn.close()
     return info
@@ -72,7 +70,7 @@ def get_user_quiz(user_id, quiz_id):
     cursor.execute(
         "SELECT sent,answer,result from USERQUIZ where "
         "userid = '{0}' and quizid = {1} order by sent desc"
-        .format(user_id, quiz_id))
+            .format(user_id, quiz_id))
     info = list(cursor.fetchall())
     conn.close()
     return info
@@ -101,7 +99,7 @@ def get_quiz(user_id, user):
         cursor.execute(
             "SELECT id, release, expire, problem, tests, results, "
             "diagnosis, numb from QUIZ where id = {0} and release < '{1}'"
-            .format(user_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+                .format(user_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
     info = list(reg for reg in cursor.fetchall())
     conn.close()
     return info
@@ -158,7 +156,7 @@ def main():
             msg = "Sorry... Prazo expirado!"
 
         file = request.files['code']
-        filename = './upload/{0}-{1}.py'.format(AUTH.username(), sent)
+        filename = 'src/upload/{0}-{1}.py'.format(AUTH.username(), sent)
         file.save(filename)
         with open(filename, 'r') as file_read:
             answer = file_read.read()
@@ -253,3 +251,4 @@ def hash_pw(password):
 
 if __name__ == '__main__':
     APP.run(debug=True, host='0.0.0.0', port=80)
+
