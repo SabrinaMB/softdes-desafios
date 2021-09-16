@@ -53,6 +53,10 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Usuário - Professor</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#adicionando-usuarios">Adicionando usuários</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#adicionando-desafios">Adicionando desafios</a>
+    </li>
     </ul>
                     </li>
                 </ul>
@@ -98,6 +102,26 @@
             <div class="section">
               
                 <h1 id="documentacao-de-usuario-professor">Documentação de usuário - Professor</h1>
+<h2 id="adicionando-usuarios">Adicionando usuários</h2>
+<ol>
+<li>Crie um arquivo "users.csv"<ol>
+<li>Insira seu {nome} e o {tipo} de usuario que você é nesse arquivo, no formato "{nome}, {tipo}"</li>
+</ol>
+</li>
+<li>Rode o comando "python3 adduser.py"</li>
+</ol>
+<h2 id="adicionando-desafios">Adicionando desafios</h2>
+<ol>
+<li>Você terá que incluir um novo desafio na tabela QUIZ </li>
+<li>Exemplo: inserir o quiz 3, que expira dia 21 de setembro de 2021, o nome do problema é "Problema 3", os testes que serão rodados são o 1, o 2 e o 3, o resultado de todos os testes deve ser 0 e as notas dadas serão a, b e c passando em cada um dos testes respectivamente </li>
+<li>Comandos:<ol>
+<li>sqlite3</li>
+<li>INSERT INTO QUIZ (numb, expire, problem, tests, results, diagnosis)
+  VALUES(3, "2021-12-31 23:59:59", "Problema 3", [[1],[2],[3]],[0, 0, 0],["a","b","c"]);</li>
+<li>.exit</li>
+</ol>
+</li>
+</ol>
               
             </div>
           </div>
