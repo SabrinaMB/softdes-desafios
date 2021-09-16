@@ -1,6 +1,7 @@
 site_name: Documentação Softdes-Desafios
 nav:
     - Home: index.md
-    - Usuário: user.md
+    - Usuário-Professor: user_teacher.md
+    - Usuário-Aluno: user_student.md
     - Desenvolvedor: dev.md
 theme: readthedocs
