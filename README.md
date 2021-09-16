@@ -1,7 +1,11 @@
-# softdes-desafios
+# Softdes-Desafios
 
 ## Descrição do projeto:
-softdes-desafios é um framework de correção automatica de desafios de programação que já foi usado na matéria de software design do Insper. O framework está incompleto e algumas funcionalidades como a função desafio por exemplo, que da a nota ao codigo de entrada, não esta implementada.
+
+Softdes-Desafios é um framework de correção automática 
+de desafios de programação que já foi usado na matéria de 
+design de software do Insper. 
+Atualmente não está rodando em nenhum lugar e está desatualizado.
 
 ## Screenshot:
 ![screenshot](images/Screenshot.png)
