@@ -163,7 +163,7 @@ def main():
 
         args = {"ndes": user_id, "code": answer, "args": eval(quiz[4]),
                 "resp": eval(quiz[5]), "diag": eval(quiz[6])}
-
+        print(args)
         feedback = lambda_handler(args)
 
         result = 'Erro'
