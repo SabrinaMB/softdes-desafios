@@ -29,11 +29,13 @@ def test_wrong_answer():  # Aluno envia desafio com resposta incorreta
     driver = webdriver.Firefox()
     try:
         driver.get(f"http://admin:admin@{address}/")
-        driver.find_element_by_id("resposta").send_keys(os.getcwd()+"/src/adduser.py")
+        driver.find_element_by_id("resposta").send_keys(os.getcwd() + "/src/adduser.py")
         driver.find_element_by_id("submit").click()
-        assert False
+        answers_table = driver.find_element_by_id("answers_table")
+        last_answer = answers_table.find_elements_by_id("date")[0]
+        assert last_answer.text == "Erro"
     except:
-        assert True
+        assert False
     driver.close()
 
 
@@ -41,9 +43,11 @@ def test_right_answer():  # Aluno envia desafio com resposta correta
     driver = webdriver.Firefox()
     try:
         driver.get(f"http://admin:admin@{address}/")
-        driver.find_element_by_id("resposta").send_keys(os.getcwd()+"/src/desafio.py")
+        driver.find_element_by_id("resposta").send_keys(os.getcwd() + "/src/adduser.py")
         driver.find_element_by_id("submit").click()
-        assert True
+        answers_table = driver.find_element_by_id("answers_table")
+        last_answer = answers_table.find_elements_by_id("date")[0]
+        assert last_answer.text == "OK!"
     except:
         assert False
     driver.close()

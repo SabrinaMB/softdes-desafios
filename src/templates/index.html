@@ -115,7 +115,7 @@
           <br /><br />
           <h3>Envios:</h3>
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table id="answers_table" class="table table-striped">
               <thead>
                 <tr>
                   <th>Data</th>
@@ -126,9 +126,9 @@
               <tbody>
  				{% for ans in answers %}
                 <tr>
-                  <td>{{ ans[0] }}</td>
-                  <td>{{ ans[1] }}</td>
-                  <td>{{ ans[2] }}</td>
+                  <td id="date">{{ ans[0] }}</td>
+                  <td id="feedback">{{ ans[1] }}</td>
+                  <td id="result">{{ ans[2] }}</td>
                 </tr>
 				{% endfor %}
               </tbody>
