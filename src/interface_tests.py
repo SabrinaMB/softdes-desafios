@@ -1,43 +1,49 @@
+import os
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
-driver = webdriver.Firefox()
+address = os.getenv("ADDRESS")
 
 
 def test_login_success():  # Aluno faz login com sucesso
+    driver = webdriver.Firefox()
     try:
-        driver.get("http://admin:admin@192.168.15.126/")
+        driver.get(f"http://admin:admin@{address}/")
         assert True
     except:
         assert False
+    driver.close()
 
 
 def test_wrong_password():  # Aluno entra senha incorreta
+    driver = webdriver.Firefox()
     try:
-        driver.get("http://admin:adm@192.168.15.126/")
+        driver.get(f"http://admin:adm@{address}/")
+        driver.page_source()
         assert False
     except:
         assert True
+    driver.close()
 
 
 def test_wrong_answer():  # Aluno envia desafio com resposta incorreta
+    driver = webdriver.Firefox()
     try:
-        driver.get("http://admin:admin@192.168.15.126/")
-        driver.find_element_by_id("resposta").send_keys("adduser.py")
+        driver.get(f"http://admin:admin@{address}/")
+        driver.find_element_by_id("resposta").send_keys(os.getcwd()+"/src/adduser.py")
         driver.find_element_by_id("submit").click()
-        assert True
+        assert False
     except:
         assert True
+    driver.close()
 
 
 def test_right_answer():  # Aluno envia desafio com resposta correta
+    driver = webdriver.Firefox()
     try:
-        driver.get("http://admin:admin@192.168.15.126/")
-        driver.find_element_by_id("resposta").send_keys("desafio.py")
+        driver.get(f"http://admin:admin@{address}/")
+        driver.find_element_by_id("resposta").send_keys(os.getcwd()+"/src/desafio.py")
         driver.find_element_by_id("submit").click()
         assert True
     except:
         assert False
-
-
-driver.close()
+    driver.close()
