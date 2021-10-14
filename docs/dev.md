@@ -14,8 +14,10 @@
       4. Rode o comando "sudo python3 adduser.py"
       5. Rode o comando "sudo python3 softdes.py"
 2. Com docker:
-   1. sudo docker build -t desafios .
-   2. sudo docker run -p 0.0.0.0:8080:80 desafios
+   1. Na pasta base (softdes-desafios) rode:
+      1. docker volume create quiz.db
+      2. sudo docker build -t desafios . 
+      3. sudo docker run -p 0.0.0.0:8080:80 -v /var/lib/docker/volumes/quiz.db/_data:/src desafios
 3. Para rodar os testes de interface:
    1. instale geckodriver
    2. ponha o caminho até ele no PATH

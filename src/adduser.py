@@ -1,13 +1,14 @@
 """
 Adiciona um novo usuário a partir do arquivo users.csv
 """
+import os
 import sqlite3
 import hashlib
 
 
 def add_user(new_user, pwd, new_user_type):
     """Adiciona novo usuário"""
-    conn = sqlite3.connect('quiz.db')
+    conn = sqlite3.connect('src/quiz.db')
     cursor = conn.cursor()
     cursor.execute('Insert into USER(user,pass,type) values("{0}","{1}","{2}");'
                    .format(new_user, pwd, new_user_type))
@@ -15,7 +16,7 @@ def add_user(new_user, pwd, new_user_type):
     conn.close()
 
 
-with open('users.csv', 'r') as file:
+with open("src/users.csv", 'r') as file:
     LINES = file.read().splitlines()
 
 for users in LINES:
